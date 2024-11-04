@@ -19,13 +19,8 @@ export default function IndexPage({
     heroImage,
     galleryImages,
     studioImages,
+    seoData,
 }) {
-    const seoData = {
-        title: 'Popnailscz - Маникюр и Педикюр в Праге',
-        description: 'Popnailscz предлагает лучшие услуги маникюра и педикюра в Праге. Забронируйте ваш сеанс уже сегодня!',
-        keywords: 'маникюр, педикюр, Прага, Popnailscz, студия красоты'
-    };
-
     return (
         <RootLayout seoData={seoData}>
             <Page
@@ -48,23 +43,23 @@ export default function IndexPage({
     );
 }
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-    async function fetchData(endpoint: string): Promise<{ data: any[] }> {
-        try {
-            const response = await fetch(`${process.env.STRAPI_BASE_URL}${endpoint}`);
+// Функция для получения данных из Strapi
+async function fetchData(endpoint: string): Promise<{ data: any[] }> {
+    try {
+        const response = await fetch(`${process.env.STRAPI_BASE_URL}${endpoint}`);
 
-            if (!response.ok) {
-                return { data: [] };
-            }
-
-            const data = (await response.json()) as { data: any[] };
-            return data && data.data ? data : { data: [] };
-        } catch (error) {
+        if (!response.ok) {
             return { data: [] };
         }
-    }
 
-    // Оригинальные API-запросы для получения текстовой информации
+        const data = (await response.json()) as { data: any[] };
+        return data && data.data ? data : { data: [] };
+    } catch (error) {
+        return { data: [] };
+    }
+}
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
     const heroSection = await fetchData(`/api/hero-sections?locale=${locale}&populate[0]=Button`);
     const studioInfos = await fetchData(`/api/studio-infos?locale=${locale}&populate[0]=StudioComponents&populate[1]=StudioComponents.Icon`);
     const priceList = await fetchData(`/api/price-lists?locale=${locale}&populate[0]=PriceList&populate[1]=ButtonOnline&populate[2]=ButtonWhatsAPP`);
@@ -79,6 +74,14 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     const heroImage = await fetchData(`/api/first-section-background?locale=${locale}&populate=*`);
     const galleryImages = await fetchData(`/api/gallery-of-work?locale=${locale}&populate=*`);
     const studioImages = await fetchData(`/api/studio?locale=${locale}&populate=*`);
+
+    // Получаем данные SEO для текущей локализации
+    const seoDataResponse = await fetchData(`/api/seo?locale=${locale}`);
+    const seoData = seoDataResponse.data[0]?.attributes || {
+        title: 'Popnailscz - Маникюр и Педикюр в Праге',
+        description: 'Popnailscz предлагает лучшие услуги маникюра и педикюра в Праге. Забронируйте ваш сеанс уже сегодня!',
+        keywords: 'маникюр, педикюр, Прага, Popnailscz, студия красоты',
+    };
 
     return {
         props: {
@@ -96,7 +99,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
             heroImage,
             galleryImages,
             studioImages,
+            seoData,
         },
-        revalidate: 10,
     };
 };

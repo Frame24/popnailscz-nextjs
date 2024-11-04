@@ -19,7 +19,19 @@ const geistMono = localFont({
 });
 
 // SEO компонент для работы с мета-данными
-function SEO({ title, description, keywords }: { title: string, description: string, keywords: string }) {
+function SEO({
+    title,
+    description,
+    keywords,
+    ogImage = "https://popnailscz.example.com/og-image.jpg",
+    ogUrl = "https://popnailscz.cz",
+}: {
+    title: string;
+    description: string;
+    keywords: string;
+    ogImage?: string;
+    ogUrl?: string;
+}) {
     return (
         <Head>
             <title>{title}</title>
@@ -28,8 +40,8 @@ function SEO({ title, description, keywords }: { title: string, description: str
             <meta name="robots" content="index, follow" />
             <meta property="og:title" content={title} />
             <meta property="og:description" content={description} />
-            <meta property="og:image" content="https://popnailscz.example.com/og-image.jpg" />
-            <meta property="og:url" content="https://popnailscz.cz" />
+            <meta property="og:image" content={ogImage} />
+            <meta property="og:url" content={ogUrl} />
             <meta name="twitter:card" content="summary_large_image" />
         </Head>
     );
@@ -38,25 +50,32 @@ function SEO({ title, description, keywords }: { title: string, description: str
 export default function RootLayout({
     children,
     seoData = {
-        title: 'Default Title',
-        description: 'Default Description',
-        keywords: 'default, keywords'
-    }
+        title: "Default Title",
+        description: "Default Description",
+        keywords: "default, keywords",
+        ogImage: "https://popnailscz.example.com/og-image.jpg",
+        ogUrl: 'https://popnailscz.netlify.app/',
+    },
 }: Readonly<{
-    children: React.ReactNode,
+    children: React.ReactNode;
     seoData: {
-        title: string,
-        description: string,
-        keywords: string
-    }
+        title: string;
+        description: string;
+        keywords: string;
+        ogImage?: string;
+        ogUrl?: string;
+    };
 }>) {
     return (
         <>
-            <SEO title={seoData.title} description={seoData.description} keywords={seoData.keywords} />
-            <div
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-            >
-                {/* Контент страниц будет вставлен здесь */}
+            <SEO
+                title={seoData.title}
+                description={seoData.description}
+                keywords={seoData.keywords}
+                ogImage={seoData.ogImage}
+                ogUrl={seoData.ogUrl}
+            />
+            <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
                 {children}
             </div>
         </>

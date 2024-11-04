@@ -1,21 +1,19 @@
-// pages/api/revalidate.ts
-
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    // Проверка на секретный токен, чтобы избежать нежелательных запросов
-    if (req.query.secret !== process.env.NEXT_REVALIDATE_TOKEN) {
-        return res.status(401).json({ message: 'Invalid token' });
-    }
+    // Проверяем, что это POST-запрос и содержит правильный токен
+    if (req.method === 'POST' && req.headers['x-strapi-signature'] === process.env.NEXT_REVALIDATE_TOKEN) {
+        try {
+            // Указываем страницы для revalidate
+            await res.revalidate('/'); // Главная страница
+            await res.revalidate('/another-page'); // Дополнительные страницы, если нужно
 
-    try {
-        // Укажите здесь страницы, которые должны обновляться
-        await res.revalidate('/');
-        await res.revalidate('/some-other-page');
-        // Добавьте другие страницы, если необходимо
-
-        return res.json({ revalidated: true });
-    } catch (err) {
-        return res.status(500).send('Error revalidating');
+            return res.json({ revalidated: true });
+        } catch (err) {
+            return res.status(500).json({ message: 'Ошибка при revalidate' });
+        }
+    } else {
+        // Если метод запроса не POST или токен не совпадает
+        return res.status(401).json({ message: 'Неверный токен' });
     }
 }
