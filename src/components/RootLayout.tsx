@@ -49,31 +49,25 @@ function SEO({
 
 export default function RootLayout({
     children,
-    seoData = {
-        title: "Default Title",
-        description: "Default Description",
-        keywords: "default, keywords",
-        ogImage: "https://popnailscz.example.com/og-image.jpg",
-        ogUrl: 'https://popnailscz.netlify.app/',
-    },
+    seoData = { data: [] },
+    strapiBaseUrl,
 }: Readonly<{
     children: React.ReactNode;
-    seoData: {
-        title: string;
-        description: string;
-        keywords: string;
-        ogImage?: string;
-        ogUrl?: string;
-    };
+    seoData?: { data: any };
+    strapiBaseUrl: string;
 }>) {
+    const seoContent = seoData?.data[0];
+    const ogImageUrl = `${strapiBaseUrl}${seoContent?.ogImage[0]?.url || ""}`;
+    console.log(`${strapiBaseUrl} ${ogImageUrl}`)
+
     return (
         <>
             <SEO
-                title={seoData.title}
-                description={seoData.description}
-                keywords={seoData.keywords}
-                ogImage={seoData.ogImage}
-                ogUrl={seoData.ogUrl}
+                title={seoContent?.Title}
+                description={seoContent?.Description}
+                keywords={seoContent?.Keywords}
+                ogImage={ogImageUrl}
+                ogUrl={seoContent?.ogUrl}
             />
             <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
                 {children}

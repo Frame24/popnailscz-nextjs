@@ -1,8 +1,8 @@
 // pages/index.tsx
 
 import { GetStaticProps } from 'next';
-import RootLayout from '../components/RootLayout'; // Импортируем RootLayout
-import Page from './page'; // Импортируем компонент Page
+import RootLayout from '../components/RootLayout';
+import Page from './page';
 
 export default function IndexPage({
     heroSection,
@@ -20,9 +20,10 @@ export default function IndexPage({
     galleryImages,
     studioImages,
     seoData,
+    strapiBaseUrl,
 }) {
     return (
-        <RootLayout seoData={seoData}>
+        <RootLayout seoData={seoData} strapiBaseUrl={strapiBaseUrl}>
             <Page
                 heroSection={heroSection}
                 studioInfos={studioInfos}
@@ -76,12 +77,8 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     const studioImages = await fetchData(`/api/studio?locale=${locale}&populate=*`);
 
     // Получаем данные SEO для текущей локализации
-    const seoDataResponse = await fetchData(`/api/seo?locale=${locale}`);
-    const seoData = seoDataResponse.data[0]?.attributes || {
-        title: 'Popnailscz - Маникюр и Педикюр в Праге',
-        description: 'Popnailscz предлагает лучшие услуги маникюра и педикюра в Праге. Забронируйте ваш сеанс уже сегодня!',
-        keywords: 'маникюр, педикюр, Прага, Popnailscz, студия красоты',
-    };
+    const seoData = await fetchData(`/api/seos?locale=${locale}&populate=*`);
+    const strapiBaseUrl = process.env.STRAPI_BASE_URL;
 
     return {
         props: {
@@ -100,6 +97,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
             galleryImages,
             studioImages,
             seoData,
+            strapiBaseUrl,
         },
     };
 };

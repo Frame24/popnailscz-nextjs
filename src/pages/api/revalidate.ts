@@ -6,8 +6,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         try {
             // Указываем страницы для revalidate
             await res.revalidate('/'); // Главная страница
-            await res.revalidate('/another-page'); // Дополнительные страницы, если нужно
-
+            await res.revalidate('/en'); // Главная страница
+            await res.revalidate('/ru'); // Главная страница
             return res.json({ revalidated: true });
         } catch (err) {
             return res.status(500).json({ message: 'Ошибка при revalidate' });
