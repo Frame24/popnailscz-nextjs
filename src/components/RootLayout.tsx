@@ -39,6 +39,9 @@ function SEO({
         <meta name="keywords" content={keywords} />
         <meta name="robots" content="index, follow" />
 
+        {/* Favicon */}
+        <link rel="icon" href="/favicon.ico" />
+
         {/* Open Graph мета-теги для соцсетей */}
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
