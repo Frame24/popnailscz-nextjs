@@ -48,33 +48,21 @@ export default function IndexPage({
     );
 }
 
-async function fetchWithRetry(url: string, options = {}, retries = 5, delay = 2000): Promise<any> {
-    for (let i = 0; i < retries; i++) {
-        try {
-            const response = await fetch(url, options);
-            if (response.ok) {
-                return response.json(); // сразу возвращаем JSON объект
-            } else {
-                console.error(`Ошибка запроса, попытка ${i + 1} из ${retries}`, response.status, response.statusText);
-            }
-        } catch (error) {
-            console.error(`Ошибка при выполнении fetch, попытка ${i + 1} из ${retries}`, error);
-        }
-        await new Promise(resolve => setTimeout(resolve, delay));
-    }
-    throw new Error(`Не удалось получить данные с ${url} после ${retries} попыток`);
-}
-
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-    const fetchData = async (url: string) => {
+    async function fetchData(endpoint: string): Promise<{ data: any[] }> {
         try {
-            const data = await fetchWithRetry(`${process.env.STRAPI_BASE_URL}${url}`, {}, 5, 2000);
-            return data?.data ? data : { data: [] }; // Если нет данных, возвращаем пустой массив
+            const response = await fetch(`${process.env.STRAPI_BASE_URL}${endpoint}`);
+
+            if (!response.ok) {
+                return { data: [] };
+            }
+
+            const data = (await response.json()) as { data: any[] };
+            return data && data.data ? data : { data: [] };
         } catch (error) {
-            console.error(`Ошибка получения данных от ${url}:`, error);
-            return { data: [] }; // Возвращаем пустую структуру в случае ошибки
+            return { data: [] };
         }
-    };
+    }
 
     // Оригинальные API-запросы для получения текстовой информации
     const heroSection = await fetchData(`/api/hero-sections?locale=${locale}&populate[0]=Button`);
@@ -105,7 +93,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
             socials,
             footer,
             navbar,
-            // Добавляем изображения в props
             heroImage,
             galleryImages,
             studioImages,

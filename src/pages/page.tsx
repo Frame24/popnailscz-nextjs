@@ -23,35 +23,35 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 export default function Home({
-    heroSection,
-    studioInfos,
-    priceList,
-    reviewSection,
-    faq,
-    blog,
-    contact,
-    bookingSection,
-    socials,
-    footer,
-    navbar,
-    heroImage,
-    galleryImages,
-    studioImages,
+    heroSection = { data: [] },
+    studioInfos = { data: [] },
+    priceList = { data: [] },
+    reviewSection = { data: [] },
+    faq = { data: [] },
+    blog = { data: [] },
+    contact = { data: [] },
+    bookingSection = { data: [] },
+    socials = { data: [] },
+    footer = { data: [] },
+    navbar = { data: [] },
+    heroImage = { data: null },
+    galleryImages = { data: [] },
+    studioImages = { data: [] },
 }: {
-    heroSection: any,
-    studioInfos: any,
-    priceList: any,
-    reviewSection: any,
-    faq: any,
-    blog: any,
-    contact: any,
-    bookingSection: any,
-    socials: any,
-    footer: any,
-    navbar: any,
-    heroImage: any,
-    galleryImages: any,
-    studioImages: any,
+    heroSection?: { data: any },
+    studioInfos?: { data: any },
+    priceList?: { data: any },
+    reviewSection?: { data: any },
+    faq?: { data: any },
+    blog?: { data: any },
+    contact?: { data: any },
+    bookingSection?: { data: any },
+    socials?: { data: any },
+    footer?: { data: any },
+    navbar?: { data: any },
+    heroImage?: { data: any },
+    galleryImages?: { data: any },
+    studioImages?: { data: any },
 }) {
 
     const strapiBaseUrl = process.env.STRAPI_BASE_URL;
@@ -66,7 +66,7 @@ export default function Home({
 
     // Сортируем элементы навбара в соответствии с заданным порядком
     const orderedNavbarItems = navbarOrder.map(name =>
-        navbar?.data.find((item: any) => item?.Name === name)
+        navbar?.data?.find((item: any) => item?.Name === name)
     ).filter((item: any) => item); // Фильтруем элементы, которые не найдены
 
     return (
@@ -105,7 +105,7 @@ export default function Home({
 
                             {/* Social Media Icons */}
                             <li className='flex space-x-6 mt-4 sm:mt-0'>
-                                {socials?.data.map((social, index) => (
+                                {socials?.data?.map((social, index) => (
                                     <a
                                         key={index}
                                         href={social?.Url}
@@ -213,7 +213,7 @@ export default function Home({
                                     modules={[EffectFade, Navigation, Pagination]}
                                     className='w-full h-[500px] flex items-center justify-center overflow-hidden'
                                 >
-                                    {studioImages.data.Images.map((image, index) => (
+                                    {studioImages.data?.Images.map((image, index) => (
                                         <SwiperSlide key={index}>
                                             <img
                                                 src={`${strapiBaseUrl}${image?.url}`}
@@ -260,7 +260,7 @@ export default function Home({
                                     modules={[EffectFade, Navigation, Pagination]}
                                     className='w-full h-80 flex items-center justify-center overflow-hidden'
                                 >
-                                    {galleryImages.data.Images.map((image, index) => (
+                                    {galleryImages.data?.Images.map((image, index) => (
                                         <SwiperSlide key={index}>
                                             <img
                                                 src={`${strapiBaseUrl}${image?.url}`}
@@ -458,7 +458,7 @@ export default function Home({
 
                     {/* Иконки социальных сетей */}
                     <div className='flex justify-center sm:justify-start space-x-6'>
-                        {socials?.data.map((social, index) => (
+                        {socials?.data?.map((social, index) => (
                             <a
                                 key={index}
                                 href={social?.Url}
