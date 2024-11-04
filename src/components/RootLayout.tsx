@@ -55,9 +55,9 @@ function SEO({
         <meta name="twitter:image" content={ogImage} />
 
         {/* Hreflang теги для локализаций */}
-        <link rel="alternate" href="https://popnailscz.netlify.app/" hrefLang="cs-CZ" />
-        <link rel="alternate" href="https://popnailscz.netlify.app/en" hrefLang="en" />
-        <link rel="alternate" href="https://popnailscz.netlify.app/ru" hrefLang="ru" />
+        <link rel="alternate" href="https://popnails.cz/" hrefLang="cs-CZ" />
+        <link rel="alternate" href="https://popnails.cz/en" hrefLang="en" />
+        <link rel="alternate" href="https://popnails.cz/ru" hrefLang="ru" />
 
         {/* JSON-LD Schema */}
         <script type="application/ld+json">

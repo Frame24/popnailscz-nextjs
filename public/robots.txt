@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://popnailscz.netlify.app
+Host: https://popnails.cz
 
 # Sitemaps
-Sitemap: https://popnailscz.netlify.app/sitemap.xml
+Sitemap: https://popnails.cz/sitemap.xml
