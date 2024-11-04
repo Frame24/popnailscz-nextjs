@@ -1,3 +1,9 @@
-# To prevent search engines from seeing the site altogether, uncomment the next two lines:
-# User-Agent: *
-# Disallow: /
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://popnailscz.netlify.app
+
+# Sitemaps
+Sitemap: https://popnailscz.netlify.app/sitemap.xml
