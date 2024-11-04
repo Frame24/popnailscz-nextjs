@@ -96,15 +96,15 @@ export default function Home({
                     >
                         <ul className='flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-6'>
                             {orderedNavbarItems.map((item, index) => (
-                                <li key={index} className='first:pl-4'>
-                                    <a href={`#${item?.Name.toLowerCase()}`} className='text-lg sm:text-base text-gray-700 hover:text-pink-500'>
+                                <li key={index} className='pl-4 sm:pl-0'> {/* Отступ слева для каждого элемента */}
+                                    <a href={`#${item?.Name.toLowerCase()}`} className='block text-lg sm:text-base text-gray-700 hover:text-pink-500 p-2'>
                                         {item?.Text}
                                     </a>
                                 </li>
                             ))}
 
                             {/* Social Media Icons */}
-                            <li className='flex space-x-6 mt-4 sm:mt-0'>
+                            <li className='flex space-x-6 mt-4 sm:mt-0 pl-4 sm:pl-0'> {/* Добавлен отступ слева */}
                                 {socials?.data?.map((social, index) => (
                                     <a
                                         key={index}
@@ -126,13 +126,14 @@ export default function Home({
                             </li>
 
                             {/* Language Switch Buttons */}
-                            <li className='flex space-x-4 mt-4 sm:mt-0'>
+                            <li className='flex space-x-4 mt-4 sm:mt-0 pl-4 sm:pl-0'> {/* Добавлен отступ слева */}
                                 <button onClick={() => changeLanguage('cs-CZ')} className={`text-gray-700 ${router.locale === 'cs-CZ' ? 'font-bold' : ''} hover:text-pink-500`}>CZ</button>
                                 <button onClick={() => changeLanguage('en')} className={`text-gray-700 ${router.locale === 'en' ? 'font-bold' : ''} hover:text-pink-500`}>EN</button>
                                 <button onClick={() => changeLanguage('ru')} className={`text-gray-700 ${router.locale === 'ru' ? 'font-bold' : ''} hover:text-pink-500`}>RU</button>
                             </li>
                         </ul>
                     </nav>
+
                 </div>
             </header>
 
