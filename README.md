@@ -88,13 +88,13 @@ The project can be deployed to platforms like Vercel, Netlify, or other services
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under a customized version of the MIT License specifically for Popnail CZ. The client has full rights to use, modify, and distribute the code as needed for internal purposes. See the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
-Feel free to open issues or submit pull requests to improve the project.
+This project was developed for Popnail CZ by АСУРСОФТ and is intended solely for the client's internal use. External contributions are not being accepted at this time.
 
 ## Contact
 
-For any inquiries, please reach out to the project owner.
+For any inquiries, please reach out to Popnailscz or developer company АСУРСОФТ.
 
