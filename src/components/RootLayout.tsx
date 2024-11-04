@@ -32,18 +32,52 @@ function SEO({
     ogImage?: string;
     ogUrl?: string;
 }) {
-    return (
-        <Head>
-            <title>{title}</title>
-            <meta name="description" content={description} />
-            <meta name="keywords" content={keywords} />
-            <meta name="robots" content="index, follow" />
-            <meta property="og:title" content={title} />
-            <meta property="og:description" content={description} />
-            <meta property="og:image" content={ogImage} />
-            <meta property="og:url" content={ogUrl} />
-            <meta name="twitter:card" content="summary_large_image" />
-        </Head>
+    return (<Head>
+        {/* SEO мета-теги */}
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="keywords" content={keywords} />
+        <meta name="robots" content="index, follow" />
+
+        {/* Open Graph мета-теги для соцсетей */}
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:url" content={ogUrl} />
+
+        {/* Twitter Cards */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={ogImage} />
+
+        {/* Hreflang теги для локализаций */}
+        <link rel="alternate" href="https://popnailscz.netlify.app/" hrefLang="cs-CZ" />
+        <link rel="alternate" href="https://popnailscz.netlify.app/en" hrefLang="en" />
+        <link rel="alternate" href="https://popnailscz.netlify.app/ru" hrefLang="ru" />
+
+        {/* JSON-LD Schema */}
+        <script type="application/ld+json">
+            {JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "LocalBusiness",
+                "name": "Popnailscz",
+                "image": ogImage,
+                "url": ogUrl,
+                "telephone": "+420123456789",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Praha 1, Náměstí",
+                    "addressLocality": "Praha",
+                    "postalCode": "11000",
+                    "addressCountry": "CZ"
+                },
+                "openingHours": "Mo,Tu,We,Th,Fr 09:00-19:00",
+                "priceRange": "$$"
+            })}
+        </script>
+    </Head>
+
     );
 }
 
@@ -58,7 +92,7 @@ export default function RootLayout({
 }>) {
     const seoContent = seoData?.data[0];
     const ogImageUrl = `${strapiBaseUrl}${seoContent?.ogImage[0]?.url || ""}`;
-    console.log(`${strapiBaseUrl} ${ogImageUrl}`)
+    // console.log(`${strapiBaseUrl} ${ogImageUrl}`)
 
     return (
         <>

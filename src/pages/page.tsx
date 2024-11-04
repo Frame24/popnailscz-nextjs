@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useState } from 'react';
 import PriceList from '../components/PriceList';
@@ -21,6 +20,7 @@ import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import Image from 'next/image';
 
 export default function Home({
     heroSection = { data: [] },
@@ -179,28 +179,29 @@ export default function Home({
                     {studioInfos?.data?.[0]?.Title || "Naše Studio"}
                 </h2>
                 <div className='container mx-auto flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-24'>
-                    {/* Текстовая часть с карточками */}
                     <div className='w-full lg:w-1/2 grid grid-cols-1 gap-8'>
                         {studioInfos?.data?.[0]?.StudioComponents?.map((component, index) => (
-                            <div key={index} className='bg-white p-6 rounded-xl shadow-lg flex items-start transition hover:shadow-2xl transform hover:scale-105'>
+                            <div
+                                key={index}
+                                className='bg-white p-6 rounded-xl shadow-lg flex items-start transition hover:shadow-2xl transform hover:scale-105'
+                            >
                                 {component?.Icon && (
-                                    <img
+                                    <Image
                                         src={`${strapiBaseUrl}${component?.Icon?.url || component?.Icon?.formats?.thumbnail?.url}`}
-                                        alt={component?.Title}
-                                        className='w-12 h-12 mr-4'
+                                        alt={component?.Title || "Icon"}
+                                        width={48} // Укажите ширину изображения
+                                        height={48} // Укажите высоту изображения
+                                        className='w-12 h-12 mr-4 self-start' // Добавлено 'self-start' для выравнивания по верхнему краю
                                     />
                                 )}
                                 <div className='flex-grow'>
-                                    <h4 className='text-2xl font-bold text-gray-800 mb-2'>
-                                        {component?.Title}
-                                    </h4>
-                                    <p className='text-lg text-gray-700'>
-                                        {component?.Description}
-                                    </p>
+                                    <h4 className='text-2xl font-bold text-gray-800 mb-2'>{component?.Title}</h4>
+                                    <p className='text-lg text-gray-700'>{component?.Description}</p>
                                 </div>
                             </div>
                         ))}
                     </div>
+
 
                     {/* Слайдер с изображениями студии */}
                     <div className='w-full lg:w-1/2'>
@@ -214,16 +215,23 @@ export default function Home({
                                     className='w-full h-[500px] flex items-center justify-center overflow-hidden'
                                 >
                                     {studioImages.data?.Images.map((image, index) => (
+
                                         <SwiperSlide key={index}>
-                                            <img
-                                                src={`${strapiBaseUrl}${image?.url}`}
-                                                alt={`Studio ${index}`}
-                                                className='w-full h-full object-cover rounded-lg shadow-xl'
-                                                loading='lazy'
-                                                style={{ userSelect: 'none' }}
-                                                onMouseDown={e => e.preventDefault()}
-                                            />
+                                            <div className="relative w-full h-full"> {/* Контейнер с фиксированной высотой */}
+                                                <Image
+                                                    src={`${strapiBaseUrl}${image?.url}`}
+                                                    alt={`Studio ${index}`}
+                                                    layout="fill" // Заполняет контейнер
+                                                    objectFit="cover" // Подгоняет изображение под размеры контейнера
+                                                    className="rounded-lg shadow-xl"
+                                                    loading="lazy"
+                                                    unselectable="on"
+                                                    onMouseDown={e => e.preventDefault()}
+                                                />
+                                            </div>
                                         </SwiperSlide>
+
+
                                     ))}
                                 </Swiper>
                             </div>
@@ -262,14 +270,17 @@ export default function Home({
                                 >
                                     {galleryImages.data?.Images.map((image, index) => (
                                         <SwiperSlide key={index}>
-                                            <img
-                                                src={`${strapiBaseUrl}${image?.url}`}
-                                                alt={`Práce ${index}`}
-                                                className='w-full h-80 object-cover rounded-lg shadow-xl'
-                                                loading='lazy'
-                                                style={{ userSelect: 'none' }}
-                                                onMouseDown={e => e.preventDefault()}
-                                            />
+                                            <div className="w-full h-80 relative">
+                                                <Image
+                                                    src={`${strapiBaseUrl}${image?.url}`}
+                                                    alt={`Práce ${index}`}
+                                                    layout="fill" // Задает изображению адаптивное заполнение контейнера
+                                                    className="object-cover rounded-lg shadow-xl"
+                                                    loading="lazy"
+                                                    unselectable="on"
+                                                    onMouseDown={(e) => e.preventDefault()}
+                                                />
+                                            </div>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
