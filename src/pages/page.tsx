@@ -54,7 +54,7 @@ export default function Home({
     studioImages?: { data: any },
 }) {
 
-    const strapiBaseUrl = "";//process.env.STRAPI_BASE_URL;
+    const strapiBaseUrl = process.env.STRAPI_BASE_URL;
     const [isMenuOpen, setMenuOpen] = useState(false);
     const router = useRouter();
 
@@ -144,7 +144,7 @@ export default function Home({
             <section
                 className='flex flex-col items-center justify-between min-h-screen bg-cover bg-center relative text-white'
                 style={{
-                    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${strapiBaseUrl}${heroImage.data?.Image?.url}')`,
+                    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/api/image-proxy?url=${encodeURIComponent(`${strapiBaseUrl}${heroImage.data?.Image?.url}`)}')`,
                     backgroundColor: '#f0f0f0' // Отображается при ошибке загрузки фона
                 }}
             >
@@ -188,7 +188,7 @@ export default function Home({
                             >
                                 {component?.Icon && (
                                     <Image
-                                        src={`${strapiBaseUrl}${component?.Icon?.url || component?.Icon?.formats?.thumbnail?.url}`}
+                                        src={`/api/image-proxy?url=${encodeURIComponent(`${strapiBaseUrl}${component?.Icon?.url || component?.Icon?.formats?.thumbnail?.url}`)}`}
                                         alt={component?.Title || "Icon"}
                                         width={48} // Укажите ширину изображения
                                         height={48} // Укажите высоту изображения
@@ -220,7 +220,7 @@ export default function Home({
                                         <SwiperSlide key={index}>
                                             <div className="relative w-full h-full"> {/* Контейнер с фиксированной высотой */}
                                                 <Image
-                                                    src={`${strapiBaseUrl}${image?.url}`}
+                                                    src={`/api/image-proxy?url=${encodeURIComponent(`${strapiBaseUrl}${image?.url}`)}`}
                                                     alt={`Studio ${index}`}
                                                     layout="fill" // Заполняет контейнер
                                                     objectFit="cover" // Подгоняет изображение под размеры контейнера
@@ -273,7 +273,7 @@ export default function Home({
                                         <SwiperSlide key={index}>
                                             <div className="w-full h-80 relative">
                                                 <Image
-                                                    src={`${strapiBaseUrl}${image?.url}`}
+                                                    src={`/api/image-proxy?url=${encodeURIComponent(`${strapiBaseUrl}${image?.url}`)}`}
                                                     alt={`Práce ${index}`}
                                                     layout="fill" // Задает изображению адаптивное заполнение контейнера
                                                     className="object-cover rounded-lg shadow-xl"

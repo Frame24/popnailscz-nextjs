@@ -94,8 +94,10 @@ export default function RootLayout({
     strapiBaseUrl: string;
 }>) {
     const seoContent = seoData?.data[0];
-    const ogImageUrl = `${strapiBaseUrl}${seoContent?.ogImage[0]?.url || ""}`;
-    // console.log(`${strapiBaseUrl} ${ogImageUrl}`)
+    const ogImageUrl = seoContent?.ogImage[0]?.url
+        ? `/api/image-proxy?url=${encodeURIComponent(`${strapiBaseUrl}${seoContent.ogImage[0].url}`)}`
+        : "";
+
 
     return (
         <>

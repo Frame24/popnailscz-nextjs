@@ -1,19 +1,10 @@
 // pages/index.tsx
 
 import { GetStaticProps } from 'next';
-import fs from 'fs';
 import path from 'path';
 import fetch from 'node-fetch';
 import RootLayout from '../components/RootLayout';
 import Page from './page';
-
-// Утилита для скачивания изображений
-async function downloadImage(url: string, dest: string) {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`Failed to fetch image: ${url}`);
-    const buffer = await res.buffer();
-    fs.writeFileSync(dest, buffer);
-}
 
 // Основной компонент страницы
 export default function IndexPage({
@@ -91,54 +82,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
     // Получаем данные SEO для текущей локализации
     const seoData = await fetchData(`/api/seos?locale=${locale}&populate=*`);
-    const strapiBaseUrl = "";//process.env.STRAPI_BASE_URL;
-
-    // Скачиваем изображения и сохраняем в `public/uploads`
-    const uploadsDir = path.join(process.cwd(), 'public/uploads');
-    if (!fs.existsSync(uploadsDir)) {
-        fs.mkdirSync(uploadsDir, { recursive: true });
-    }
-
-    const downloadImages = async (imageData: any) => {
-        // Проверяем, есть ли поле Images, и является ли оно массивом
-        if (Array.isArray(imageData.Images)) {
-            for (const image of imageData.Images) {
-                if (image.url) {
-                    const imageUrl = `${process.env.STRAPI_BASE_URL}${image.url}`;
-                    const dest = path.join(uploadsDir, path.basename(image.url));
-                    try {
-                        await downloadImage(imageUrl, dest);
-                        console.log(`Изображение скачано: ${imageUrl}`);
-                    } catch (err) {
-                        console.error(`Ошибка скачивания изображения ${imageUrl}:`, err);
-                    }
-                } else {
-                    console.warn(`Изображение не имеет URL:`, image);
-                }
-            }
-        } else {
-            const image = imageData.Image;
-            if (image.url) {
-                const imageUrl = `${process.env.STRAPI_BASE_URL}${image.url}`;
-                const dest = path.join(uploadsDir, path.basename(image.url));
-                try {
-                    await downloadImage(imageUrl, dest);
-                    console.log(`Изображение скачано: ${imageUrl}`);
-                } catch (err) {
-                    console.error(`Ошибка скачивания изображения ${imageUrl}:`, err);
-                }
-            } else {
-                console.warn(`Изображение не имеет URL:`, image);
-            }
-            
-        }
-    };
-
-    // Пример: Скачиваем изображения для heroImage и galleryImages
-    await downloadImages(heroImage.data || []);
-    await downloadImages(galleryImages.data || []);
-    await downloadImages(studioImages.data || []);
-    // await downloadImages(studioInfos.data || []);
+    const strapiBaseUrl = process.env.STRAPI_BASE_URL;
 
     return {
         props: {
