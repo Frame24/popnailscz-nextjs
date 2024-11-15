@@ -54,7 +54,7 @@ export default function Home({
     studioImages?: { data: any },
 }) {
 
-    const strapiBaseUrl = process.env.STRAPI_BASE_URL;
+    const strapiBaseUrl = "";//process.env.STRAPI_BASE_URL;
     const [isMenuOpen, setMenuOpen] = useState(false);
     const router = useRouter();
 
