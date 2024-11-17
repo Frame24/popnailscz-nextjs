@@ -1,6 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const sharp = require('sharp');
 require('dotenv').config();
 
 const strapiBaseUrl = process.env.STRAPI_BASE_URL;
@@ -10,7 +11,7 @@ if (!strapiBaseUrl) {
 }
 
 const downloadImages = async (uploadsDir) => {
-    console.log(`Запуск загрузки изображений`);
+    console.log(`Запуск загрузки и конвертации изображений`);
 
     if (!fs.existsSync(uploadsDir)) {
         fs.mkdirSync(uploadsDir, { recursive: true });
@@ -20,51 +21,56 @@ const downloadImages = async (uploadsDir) => {
         const response = await axios.get(`${strapiBaseUrl}/api/upload/files`);
         const images = response.data;
 
-        // Фильтруем изображения, которых нет локально
-        const imagesToDownload = images.filter((image) => {
-            const imagePath = path.join(uploadsDir, path.basename(image.url));
-            return !fs.existsSync(imagePath);
+        const imagesToProcess = images.filter((image) => {
+            const webpPath = path.join(
+                uploadsDir,
+                `${path.basename(image.url, path.extname(image.url))}.webp`
+            );
+
+            // Если нет .webp, файл нужно обработать
+            return !fs.existsSync(webpPath);
         });
 
-        const skippedCount = images.length - imagesToDownload.length;
+        const skippedCount = images.length - imagesToProcess.length;
 
-        console.log(`Изображений для загрузки: ${imagesToDownload.length}`);
-        console.log(`Пропущено изображений (уже загружены): ${skippedCount}`);
+        console.log(`Изображений для загрузки и конвертации: ${imagesToProcess.length}`);
+        console.log(`Пропущено изображений (уже обработаны): ${skippedCount}`);
 
-        if (imagesToDownload.length === 0) {
-            console.log('Все изображения уже загружены.');
+        if (imagesToProcess.length === 0) {
+            console.log('Все изображения уже обработаны.');
             return { downloaded: 0, skipped: skippedCount };
         }
 
-        // Собираем массив промисов для загрузки изображений
-        const downloadPromises = imagesToDownload.map(async (image) => {
+        const processPromises = imagesToProcess.map(async (image) => {
             const imageUrl = `${strapiBaseUrl}${image.url}`;
-            const imagePath = path.join(uploadsDir, path.basename(image.url));
+            const webpPath = path.join(
+                uploadsDir,
+                `${path.basename(image.url, path.extname(image.url))}.webp`
+            );
 
-            const writer = fs.createWriteStream(imagePath);
-
+            // Скачиваем изображение и сразу сохраняем как .webp
             const downloadResponse = await axios({
                 url: imageUrl,
                 method: 'GET',
-                responseType: 'stream',
+                responseType: 'arraybuffer', // Загружаем файл в буфер
             });
 
-            return new Promise((resolve, reject) => {
-                downloadResponse.data.pipe(writer);
-                writer.on('finish', resolve);
-                writer.on('error', reject);
-            });
+            // Конвертируем изображение в WebP
+            await sharp(downloadResponse.data)
+                .webp({ quality: 80 })
+                .toFile(webpPath);
         });
 
-        // Дожидаемся завершения всех скачиваний
-        await Promise.all(downloadPromises);
+        await Promise.all(processPromises);
 
-        console.log(`Загрузка завершена. Скачано изображений: ${imagesToDownload.length}`);
+        console.log(
+            `Загрузка и конвертация завершены. Обработано изображений: ${imagesToProcess.length}`
+        );
 
-        return { downloaded: imagesToDownload.length, skipped: skippedCount };
+        return { downloaded: imagesToProcess.length, skipped: skippedCount };
     } catch (err) {
-        console.error('Ошибка загрузки изображений из Strapi:', err.message || err);
-        throw err; // Пробрасываем ошибку для обработки в вызывающем коде
+        console.error('Ошибка загрузки или конвертации изображений:', err.message || err);
+        throw err;
     }
 };
 
@@ -72,10 +78,10 @@ const downloadImages = async (uploadsDir) => {
 if (require.main === module) {
     const uploadsDir = path.join(__dirname, '../../public/uploads');
     downloadImages(uploadsDir)
-        .then(({ downloaded, skipped }) =>
-            console.log(`Изображения успешно загружены. Скачано: ${downloaded}, Пропущено: ${skipped}`)
-        )
-        .catch((err) => console.error('Ошибка при загрузке изображений:', err.message || err));
+        .then(({ downloaded, skipped }) => {
+            console.log(`Изображения успешно обработаны. Скачано: ${downloaded}, Пропущено: ${skipped}`);
+        })
+        .catch((err) => console.error('Ошибка:', err.message || err));
 }
 
 // Экспортируем функцию

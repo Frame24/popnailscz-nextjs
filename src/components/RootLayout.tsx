@@ -2,7 +2,7 @@
 
 import Head from "next/head";
 import localFont from "next/font/local";
-import React from "react";
+import React, { useEffect } from "react";
 
 // Подключаем шрифты
 const geistSans = localFont({
@@ -66,19 +66,19 @@ function SEO({
                     __html: JSON.stringify({
                         "@context": "https://schema.org",
                         "@type": "LocalBusiness",
-                        "name": "Popnailscz",
-                        "image": ogImage,
-                        "url": ogUrl,
-                        "telephone": "+420123456789",
-                        "address": {
+                        name: "Popnailscz",
+                        image: ogImage,
+                        url: ogUrl,
+                        telephone: "+420123456789",
+                        address: {
                             "@type": "PostalAddress",
-                            "streetAddress": "Praha 1, Náměstí",
-                            "addressLocality": "Praha",
-                            "postalCode": "11000",
-                            "addressCountry": "CZ",
+                            streetAddress: "Praha 1, Náměstí",
+                            addressLocality: "Praha",
+                            postalCode: "11000",
+                            addressCountry: "CZ",
                         },
-                        "openingHours": "Mo,Tu,We,Th,Fr 09:00-19:00",
-                        "priceRange": "$$",
+                        openingHours: "Mo,Tu,We,Th,Fr 09:00-19:00",
+                        priceRange: "$$",
                     }),
                 }}
             />
@@ -108,6 +108,20 @@ export default function RootLayout({
         ? `/api/image-proxy?url=${encodeURIComponent(`${strapiBaseUrl}${heroImage.data.Image.url}`)}`
         : "/default-hero-image.jpg";
 
+    // Пассивный прослушиватель
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const handleScroll = () => {
+                console.log("Scroll event detected");
+            };
+            window.addEventListener("scroll", handleScroll, { passive: true });
+            return () => {
+                window.removeEventListener("scroll", handleScroll);
+            };
+        }
+    }, []);
+
+
     return (
         <>
             <Head>
@@ -120,11 +134,7 @@ export default function RootLayout({
                 />
 
                 {/* Предзагрузка изображений */}
-                <link
-                    rel="preload"
-                    href={heroImageUrl}
-                    as="image"
-                />
+                <link rel="preload" href={heroImageUrl} as="image" />
                 <link
                     rel="preload"
                     href="/fonts/GeistVF.woff"

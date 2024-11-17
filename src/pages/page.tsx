@@ -67,6 +67,10 @@ export default function Home({
         navbar?.data?.find((item: any) => item?.Name === name)
     ).filter((item: any) => item); // Фильтруем элементы, которые не найдены
 
+    const GoogleMap = dynamic(() => import('../components/GoogleMapComponent'), {
+        ssr: false,
+    });
+
     return (
         <div>
             {/* Header / Навигационное меню */}
@@ -407,17 +411,11 @@ export default function Home({
                     </div>
                 </div>
 
-                {/* Google Maps iframe с оптимизацией */}
-                <div className='mt-6'>
-                    <iframe
+                <div className="mt-6">
+                    <GoogleMap
+                        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1150.8866804480301!2d14.49033183444746!3d50.10688399427101!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470bed0c618eb39d%3A0x7529a87c66871d2b!2sPopnailscz!5e0!3m2!1scs!2sus!4v1726827052128!5m2!1scs!2sus"
                         title="Popnails Location"
-                        src='https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1150.8866804480301!2d14.49033183444746!3d50.10688399427101!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470bed0c618eb39d%3A0x7529a87c66871d2b!2sPopnailscz!5e0!3m2!1scs!2sus!4v1726827052128!5m2!1scs!2sus'
-                        width='100%'
-                        height='500'
-                        loading='lazy'
-                        referrerPolicy="no-referrer-when-downgrade"
-                        className='w-full h-96 lg:h-[600px] rounded-lg shadow-lg'
-                    ></iframe>
+                    />
                 </div>
             </section>
 
