@@ -1,7 +1,6 @@
 // pages/index.tsx
 
 import { GetStaticProps } from 'next';
-import path from 'path';
 import fetch from 'node-fetch';
 import RootLayout from '../components/RootLayout';
 import Page from './page';
@@ -49,40 +48,62 @@ export default function IndexPage({
 
 // Функция для получения данных из Strapi
 async function fetchData(endpoint: string): Promise<{ data: any[] }> {
+    const url = `${process.env.STRAPI_BASE_URL}${endpoint}`;
     try {
-        const response = await fetch(`${process.env.STRAPI_BASE_URL}${endpoint}`);
+        const response = await fetch(url);
 
         if (!response.ok) {
+            console.error(`Failed to fetch ${url}:`, response.statusText);
             return { data: [] };
         }
 
-        const data = (await response.json()) as { data: any[] };
+        const data = await response.json();
         return data && data.data ? data : { data: [] };
     } catch (error) {
+        console.error(`Error fetching ${url}:`, error);
         return { data: [] };
     }
 }
 
 // Функция getStaticProps для предварительной генерации страницы
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-    const heroSection = await fetchData(`/api/hero-sections?locale=${locale}&populate[0]=Button`);
-    const studioInfos = await fetchData(`/api/studio-infos?locale=${locale}&populate[0]=StudioComponents&populate[1]=StudioComponents.Icon`);
-    const priceList = await fetchData(`/api/price-lists?locale=${locale}&populate[0]=PriceList&populate[1]=ButtonOnline&populate[2]=ButtonWhatsAPP`);
-    const reviewSection = await fetchData(`/api/review-sections?locale=${locale}&populate[0]=Review&populate[1]=Button`);
-    const faq = await fetchData(`/api/faqs?locale=${locale}&populate[0]=QA`);
-    const blog = await fetchData(`/api/blog-sections?locale=${locale}&populate[0]=Blog`);
-    const contact = await fetchData(`/api/contacts?locale=${locale}&populate[0]=Contact`);
-    const bookingSection = await fetchData(`/api/booking-sections?locale=${locale}&populate[0]=Button`);
-    const socials = await fetchData(`/api/socials?locale=${locale}&populate=*`);
-    const footer = await fetchData(`/api/footers?locale=${locale}`);
-    const navbar = await fetchData(`/api/navbars?locale=${locale}`);
-    const heroImage = await fetchData(`/api/first-section-background?locale=${locale}&populate=*`);
-    const galleryImages = await fetchData(`/api/gallery-of-work?locale=${locale}&populate=*`);
-    const studioImages = await fetchData(`/api/studio?locale=${locale}&populate=*`);
+    const endpoints = [
+        `/api/hero-sections?locale=${locale}&populate[0]=Button`,
+        `/api/studio-infos?locale=${locale}&populate[0]=StudioComponents&populate[1]=StudioComponents.Icon`,
+        `/api/price-lists?locale=${locale}&populate[0]=PriceList&populate[1]=ButtonOnline&populate[2]=ButtonWhatsAPP`,
+        `/api/review-sections?locale=${locale}&populate[0]=Review&populate[1]=Button`,
+        `/api/faqs?locale=${locale}&populate[0]=QA`,
+        `/api/blog-sections?locale=${locale}&populate[0]=Blog`,
+        `/api/contacts?locale=${locale}&populate[0]=Contact`,
+        `/api/booking-sections?locale=${locale}&populate[0]=Button`,
+        `/api/socials?locale=${locale}&populate=*`,
+        `/api/footers?locale=${locale}`,
+        `/api/navbars?locale=${locale}`,
+        `/api/first-section-background?locale=${locale}&populate=*`,
+        `/api/gallery-of-work?locale=${locale}&populate=*`,
+        `/api/studio?locale=${locale}&populate=*`,
+        `/api/seos?locale=${locale}&populate=*`,
+    ];
 
-    // Получаем данные SEO для текущей локализации
-    const seoData = await fetchData(`/api/seos?locale=${locale}&populate=*`);
-    const strapiBaseUrl = process.env.STRAPI_BASE_URL;
+    const results = await Promise.all(endpoints.map(fetchData));
+
+    const [
+        heroSection,
+        studioInfos,
+        priceList,
+        reviewSection,
+        faq,
+        blog,
+        contact,
+        bookingSection,
+        socials,
+        footer,
+        navbar,
+        heroImage,
+        galleryImages,
+        studioImages,
+        seoData,
+    ] = results;
 
     return {
         props: {
@@ -101,8 +122,8 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
             galleryImages,
             studioImages,
             seoData,
-            strapiBaseUrl,
+            strapiBaseUrl: process.env.STRAPI_BASE_URL,
         },
-        revalidate: 86400, // ISR — обновление раз в день
+        revalidate: 86400, // ISR: Обновление страницы
     };
 };
