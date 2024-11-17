@@ -1,6 +1,7 @@
 [build]
   command = "npm run prebuild && npm run build"
-  publish = "out" # Указываем папку, куда Next.js будет собирать проект
+  publish = ".next"
 
 [build.environment]
+  NEXT_CACHE = ".next/cache"
   STRAPI_BASE_URL = "https://api.popnails.cz" # Задаем переменную окружения
