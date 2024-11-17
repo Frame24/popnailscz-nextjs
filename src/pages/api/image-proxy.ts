@@ -3,7 +3,7 @@ import path from 'path';
 import fetch from 'node-fetch';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+const uploadsDir = path.join(__dirname, '../../public/uploads');
 
 // Создаём папку uploads, если её нет
 if (!fs.existsSync(uploadsDir)) {

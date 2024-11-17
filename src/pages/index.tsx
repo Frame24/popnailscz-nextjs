@@ -25,7 +25,7 @@ export default function IndexPage({
     strapiBaseUrl,
 }) {
     return (
-        <RootLayout seoData={seoData} strapiBaseUrl={strapiBaseUrl}>
+        <RootLayout seoData={seoData} strapiBaseUrl={strapiBaseUrl} heroImage={heroImage}>
             <Page
                 heroSection={heroSection}
                 studioInfos={studioInfos}

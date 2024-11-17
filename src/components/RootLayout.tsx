@@ -32,55 +32,55 @@ function SEO({
     ogImage?: string;
     ogUrl?: string;
 }) {
-    return (<Head>
-        {/* SEO мета-теги */}
-        <title>{title}</title>
-        <meta name="description" content={description} />
-        <meta name="keywords" content={keywords} />
-        <meta name="robots" content="index, follow" />
+    return (
+        <>
+            {/* SEO мета-теги */}
+            <title>{title}</title>
+            <meta name="description" content={description} />
+            <meta name="keywords" content={keywords} />
+            <meta name="robots" content="index, follow" />
 
-        {/* Favicon */}
-        <link rel="icon" href="/favicon.ico" />
+            {/* Favicon */}
+            <link rel="icon" href="/favicon.ico" />
 
-        {/* Open Graph мета-теги для соцсетей */}
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={description} />
-        <meta property="og:image" content={ogImage} />
-        <meta property="og:url" content={ogUrl} />
+            {/* Open Graph мета-теги для соцсетей */}
+            <meta property="og:title" content={title} />
+            <meta property="og:description" content={description} />
+            <meta property="og:image" content={ogImage} />
+            <meta property="og:url" content={ogUrl} />
 
-        {/* Twitter Cards */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={title} />
-        <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={ogImage} />
+            {/* Twitter Cards */}
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" content={title} />
+            <meta name="twitter:description" content={description} />
+            <meta name="twitter:image" content={ogImage} />
 
-        {/* Hreflang теги для локализаций */}
-        <link rel="alternate" href="https://popnails.cz/" hrefLang="cs-CZ" />
-        <link rel="alternate" href="https://popnails.cz/en" hrefLang="en" />
-        <link rel="alternate" href="https://popnails.cz/ru" hrefLang="ru" />
+            {/* Hreflang теги для локализаций */}
+            <link rel="alternate" href="https://popnails.cz/" hrefLang="cs-CZ" />
+            <link rel="alternate" href="https://popnails.cz/en" hrefLang="en" />
+            <link rel="alternate" href="https://popnails.cz/ru" hrefLang="ru" />
 
-        {/* JSON-LD Schema */}
-        <script type="application/ld+json">
-            {JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "LocalBusiness",
-                "name": "Popnailscz",
-                "image": ogImage,
-                "url": ogUrl,
-                "telephone": "+420123456789",
-                "address": {
-                    "@type": "PostalAddress",
-                    "streetAddress": "Praha 1, Náměstí",
-                    "addressLocality": "Praha",
-                    "postalCode": "11000",
-                    "addressCountry": "CZ"
-                },
-                "openingHours": "Mo,Tu,We,Th,Fr 09:00-19:00",
-                "priceRange": "$$"
-            })}
-        </script>
-    </Head>
-
+            {/* JSON-LD Schema */}
+            <script type="application/ld+json">
+                {JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "LocalBusiness",
+                    "name": "Popnailscz",
+                    "image": ogImage,
+                    "url": ogUrl,
+                    "telephone": "+420123456789",
+                    "address": {
+                        "@type": "PostalAddress",
+                        "streetAddress": "Praha 1, Náměstí",
+                        "addressLocality": "Praha",
+                        "postalCode": "11000",
+                        "addressCountry": "CZ"
+                    },
+                    "openingHours": "Mo,Tu,We,Th,Fr 09:00-19:00",
+                    "priceRange": "$$"
+                })}
+            </script>
+        </>
     );
 }
 
@@ -88,10 +88,12 @@ export default function RootLayout({
     children,
     seoData = { data: [] },
     strapiBaseUrl,
+    heroImage,
 }: Readonly<{
     children: React.ReactNode;
     seoData?: { data: any };
     strapiBaseUrl: string;
+    heroImage: any;
 }>) {
     const seoContent = seoData?.data[0];
     const ogImageUrl = seoContent?.ogImage[0]?.url
@@ -101,13 +103,21 @@ export default function RootLayout({
 
     return (
         <>
-            <SEO
-                title={seoContent?.Title}
-                description={seoContent?.Description}
-                keywords={seoContent?.Keywords}
-                ogImage={ogImageUrl}
-                ogUrl={seoContent?.ogUrl}
-            />
+            <Head>
+                <SEO
+                    title={seoContent?.Title}
+                    description={seoContent?.Description}
+                    keywords={seoContent?.Keywords}
+                    ogImage={ogImageUrl}
+                    ogUrl={seoContent?.ogUrl}
+                />
+
+                <link
+                    rel="preload"
+                    href={`/api/image-proxy?url=${encodeURIComponent(`${strapiBaseUrl}${heroImage.data?.Image?.url}`)}`}
+                    as="image"
+                />
+            </Head>
             <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
                 {children}
             </div>

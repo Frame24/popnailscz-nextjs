@@ -1,8 +1,5 @@
 "use client";
 import { useState } from 'react';
-import PriceList from '../components/PriceList';
-import StudioSection from '../components/StudioSection';
-import { GetStaticProps } from 'next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faFacebookF,
@@ -21,6 +18,7 @@ import 'swiper/css/effect-fade';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 
 export default function Home({
     heroSection = { data: [] },
@@ -77,7 +75,6 @@ export default function Home({
                     <a href='#' className='text-xl sm:text-2xl font-bold text-gray-900'>
                         Popnailscz
                     </a>
-
                     <button
                         className='sm:hidden text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 rounded-md'
                         onClick={() => setMenuOpen(!isMenuOpen)}
@@ -90,7 +87,6 @@ export default function Home({
                             <FontAwesomeIcon icon={faBars} className='w-6 h-6' />
                         )}
                     </button>
-
                     <nav
                         className={`${isMenuOpen ? 'block' : 'hidden'} sm:block absolute top-full left-0 w-full bg-white sm:relative sm:w-auto sm:flex sm:items-center sm:space-x-4 p-0 sm:p-0 sm:shadow-none border-t border-gray-200 sm:border-0`}
                     >
@@ -124,7 +120,6 @@ export default function Home({
                                     </a>
                                 ))}
                             </li>
-
                             {/* Language Switch Buttons */}
                             <li className='flex space-x-4 mt-4 sm:mt-0 pl-4 sm:pl-0'> {/* Добавлен отступ слева */}
                                 <button onClick={() => changeLanguage('cs-CZ')} className={`text-gray-700 ${router.locale === 'cs-CZ' ? 'font-bold' : ''} hover:text-pink-500`}>CZ</button>
@@ -133,22 +128,22 @@ export default function Home({
                             </li>
                         </ul>
                     </nav>
-
                 </div>
             </header>
-
-
-
             {/* Hero секция */}
-
-            <section
-                className='flex flex-col items-center justify-between min-h-screen bg-cover bg-center relative text-white'
-                style={{
-                    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/api/image-proxy?url=${encodeURIComponent(`${strapiBaseUrl}${heroImage.data?.Image?.url}`)}')`,
-                    backgroundColor: '#f0f0f0' // Отображается при ошибке загрузки фона
-                }}
-            >
-                <div className='flex flex-col items-center justify-center flex-grow text-center px-4 sm:px-8 pt-24'>
+            <section className="flex flex-col items-center justify-between min-h-screen bg-center relative text-white">
+                <div className="absolute inset-0 z-0">
+                    <Image
+                        src={`/api/image-proxy?url=${encodeURIComponent(`${strapiBaseUrl}${heroImage.data?.Image?.url}`)}`}
+                        alt="Background"
+                        fill
+                        style={{ objectFit: 'cover' }}
+                        priority
+                        className="opacity-50"
+                    />
+                </div>
+                {/* Контент */}
+                <div className='flex flex-col items-center justify-center flex-grow text-center px-4 sm:px-8 pt-24  z-10'>
                     <h1 className='text-5xl sm:text-7xl font-bold mb-4 text-shadow'>
                         {heroSection?.data[0]?.Title || "Popnailscz — Manikúra a Pedikúra v Praze"}
                     </h1>
@@ -157,8 +152,7 @@ export default function Home({
                         {heroSection?.data[0]?.Description || "Vaše spokojenost, naše mise"}
                     </p>
                 </div>
-
-                <div className='flex justify-center w-full pb-28'>
+                <div className='flex justify-center w-full pb-28 z-10'>
                     <a
                         href={heroSection?.data[0]?.Button[0]?.ButtonLink || "https://n995838.alteg.io"}
                         className='px-28 py-8 sm:px-32 sm:py-10 bg-pink-500 text-white text-2xl sm:text-3xl font-semibold rounded-full shadow-lg hover:bg-pink-700'
@@ -167,13 +161,6 @@ export default function Home({
                     </a>
                 </div>
             </section>
-
-
-
-
-
-
-
             {/* О нас секция */}
             <section id='about' className='py-12 bg-gradient-to-r from-pink-100 via-pink-200 to-pink-100'>
                 <h2 className='text-5xl font-extrabold text-center text-pink-700 mb-8 font-serif tracking-wide'>
@@ -202,8 +189,6 @@ export default function Home({
                             </div>
                         ))}
                     </div>
-
-
                     {/* Слайдер с изображениями студии */}
                     <div className='w-full lg:w-1/2'>
                         {studioImages?.data?.Images?.length > 0 ? (
@@ -222,8 +207,8 @@ export default function Home({
                                                 <Image
                                                     src={`/api/image-proxy?url=${encodeURIComponent(`${strapiBaseUrl}${image?.url}`)}`}
                                                     alt={`Studio ${index}`}
-                                                    layout="fill" // Заполняет контейнер
-                                                    objectFit="cover" // Подгоняет изображение под размеры контейнера
+                                                    fill
+                                                    style={{ objectFit: 'cover' }}
                                                     className="rounded-lg shadow-xl"
                                                     loading="lazy"
                                                     unselectable="on"
@@ -231,8 +216,6 @@ export default function Home({
                                                 />
                                             </div>
                                         </SwiperSlide>
-
-
                                     ))}
                                 </Swiper>
                             </div>
@@ -243,7 +226,6 @@ export default function Home({
 
                 </div>
             </section>
-
 
             {/* Временная белая полоса */}
             <section className='py-6 sm:py-12 bg-gray-100 text-center'></section>
@@ -275,7 +257,7 @@ export default function Home({
                                                 <Image
                                                     src={`/api/image-proxy?url=${encodeURIComponent(`${strapiBaseUrl}${image?.url}`)}`}
                                                     alt={`Práce ${index}`}
-                                                    layout="fill" // Задает изображению адаптивное заполнение контейнера
+                                                    fill
                                                     className="object-cover rounded-lg shadow-xl"
                                                     loading="lazy"
                                                     unselectable="on"
@@ -307,7 +289,6 @@ export default function Home({
                         )}
                     </div>
 
-
                     {/* Таблица услуг и цен */}
                     <div className='w-full lg:w-2/3 bg-white p-10 rounded-xl shadow-xl'>
                         <table className='w-full table-auto font-serif text-lg'>
@@ -337,7 +318,6 @@ export default function Home({
                     </div>
                 </div>
             </section>
-
 
             {/* Секция с отзывами */}
             <section id='reviews' className='py-6 sm:py-12 bg-gray-100 text-center'>
@@ -385,7 +365,6 @@ export default function Home({
                 </div>
             </section>
 
-
             {/* Секция блога */}
             <section id='blog' className='py-8 sm:py-16 bg-gray-100 text-center'>
                 <h2 className='text-5xl font-extrabold text-gray-800 mb-8'>
@@ -404,7 +383,6 @@ export default function Home({
                     ))}
                 </div>
             </section>
-
 
             {/* Секция контактов */}
             <section id='contacts' className='py-6 sm:py-12 bg-pink-100 text-center'>
@@ -429,18 +407,19 @@ export default function Home({
                     </div>
                 </div>
 
-                {/* Google Maps iframe */}
+                {/* Google Maps iframe с оптимизацией */}
                 <div className='mt-6'>
                     <iframe
+                        title="Popnails Location"
                         src='https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1150.8866804480301!2d14.49033183444746!3d50.10688399427101!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470bed0c618eb39d%3A0x7529a87c66871d2b!2sPopnailscz!5e0!3m2!1scs!2sus!4v1726827052128!5m2!1scs!2sus'
                         width='100%'
                         height='500'
                         loading='lazy'
+                        referrerPolicy="no-referrer-when-downgrade"
                         className='w-full h-96 lg:h-[600px] rounded-lg shadow-lg'
                     ></iframe>
                 </div>
             </section>
-
 
             {/* Секция booking */}
             <section className='flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-pink-100 to-pink-200 text-center py-16'>
@@ -461,13 +440,11 @@ export default function Home({
                 ))}
             </section>
 
-
             {/* Footer */}
             <footer className='py-2 sm:py-4 bg-gray-900 text-white'>
                 <div className='max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center text-center sm:text-left'>
                     {/* Динамический текст футера */}
                     <p className='mb-4 sm:mb-0'>{footer?.data[0]?.Text || "© 2024 Popnailscz. Všechna práva vyhrazena."}</p>
-
                     {/* Иконки социальных сетей */}
                     <div className='flex justify-center sm:justify-start space-x-6'>
                         {socials?.data?.map((social, index) => (
@@ -489,8 +466,6 @@ export default function Home({
                     </div>
                 </div>
             </footer>
-
-
         </div>
     );
 }
