@@ -1,34 +1,33 @@
-// components/RootLayout.tsx
+"use client"; // Указываем, что это клиентский компонент
 
-"use client";  // Указываем, что это клиентский компонент
-
-import Head from 'next/head';
-import localFont from 'next/font/local';
-import React from 'react';
+import Head from "next/head";
+import localFont from "next/font/local";
+import React from "react";
 
 // Подключаем шрифты
 const geistSans = localFont({
-    src: './fonts/GeistVF.woff',
-    variable: '--font-geist-sans',
-    weight: '100 900'
+    src: "./fonts/GeistVF.woff",
+    variable: "--font-geist-sans",
+    weight: "100 900",
 });
+
 const geistMono = localFont({
-    src: './fonts/GeistMonoVF.woff',
-    variable: '--font-geist-mono',
-    weight: '100 900'
+    src: "./fonts/GeistMonoVF.woff",
+    variable: "--font-geist-mono",
+    weight: "100 900",
 });
 
 // SEO компонент для работы с мета-данными
 function SEO({
-    title,
-    description,
-    keywords,
-    ogImage = "https://popnailscz.example.com/og-image.jpg",
+    title = "Default Title",
+    description = "Default description",
+    keywords = "default, keywords",
+    ogImage = "/default-og-image.jpg",
     ogUrl = "https://popnailscz.cz",
 }: {
-    title: string;
-    description: string;
-    keywords: string;
+    title?: string;
+    description?: string;
+    keywords?: string;
     ogImage?: string;
     ogUrl?: string;
 }) {
@@ -61,25 +60,28 @@ function SEO({
             <link rel="alternate" href="https://popnails.cz/ru" hrefLang="ru" />
 
             {/* JSON-LD Schema */}
-            <script type="application/ld+json">
-                {JSON.stringify({
-                    "@context": "https://schema.org",
-                    "@type": "LocalBusiness",
-                    "name": "Popnailscz",
-                    "image": ogImage,
-                    "url": ogUrl,
-                    "telephone": "+420123456789",
-                    "address": {
-                        "@type": "PostalAddress",
-                        "streetAddress": "Praha 1, Náměstí",
-                        "addressLocality": "Praha",
-                        "postalCode": "11000",
-                        "addressCountry": "CZ"
-                    },
-                    "openingHours": "Mo,Tu,We,Th,Fr 09:00-19:00",
-                    "priceRange": "$$"
-                })}
-            </script>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "LocalBusiness",
+                        "name": "Popnailscz",
+                        "image": ogImage,
+                        "url": ogUrl,
+                        "telephone": "+420123456789",
+                        "address": {
+                            "@type": "PostalAddress",
+                            "streetAddress": "Praha 1, Náměstí",
+                            "addressLocality": "Praha",
+                            "postalCode": "11000",
+                            "addressCountry": "CZ",
+                        },
+                        "openingHours": "Mo,Tu,We,Th,Fr 09:00-19:00",
+                        "priceRange": "$$",
+                    }),
+                }}
+            />
         </>
     );
 }
@@ -87,35 +89,55 @@ function SEO({
 export default function RootLayout({
     children,
     seoData = { data: [] },
-    strapiBaseUrl,
-    heroImage,
-}: Readonly<{
+    strapiBaseUrl = "",
+    heroImage = {},
+}: {
     children: React.ReactNode;
     seoData?: { data: any };
-    strapiBaseUrl: string;
-    heroImage: any;
-}>) {
-    const seoContent = seoData?.data[0];
-    const ogImageUrl = seoContent?.ogImage[0]?.url
+    strapiBaseUrl?: string;
+    heroImage?: any;
+}) {
+    // Обработка SEO данных
+    const seoContent = seoData?.data?.[0] || {};
+    const ogImageUrl = seoContent?.ogImage?.[0]?.url
         ? `/api/image-proxy?url=${encodeURIComponent(`${strapiBaseUrl}${seoContent.ogImage[0].url}`)}`
-        : "";
+        : "/default-og-image.jpg";
 
+    // Обработка изображения героя
+    const heroImageUrl = heroImage?.data?.Image?.url
+        ? `/api/image-proxy?url=${encodeURIComponent(`${strapiBaseUrl}${heroImage.data.Image.url}`)}`
+        : "/default-hero-image.jpg";
 
     return (
         <>
             <Head>
                 <SEO
-                    title={seoContent?.Title}
-                    description={seoContent?.Description}
-                    keywords={seoContent?.Keywords}
+                    title={seoContent?.Title || "Default Title"}
+                    description={seoContent?.Description || "Default description"}
+                    keywords={seoContent?.Keywords || "default, keywords"}
                     ogImage={ogImageUrl}
-                    ogUrl={seoContent?.ogUrl}
+                    ogUrl={seoContent?.ogUrl || "https://popnailscz.cz"}
                 />
 
+                {/* Предзагрузка изображений */}
                 <link
                     rel="preload"
-                    href={`/api/image-proxy?url=${encodeURIComponent(`${strapiBaseUrl}${heroImage.data?.Image?.url}`)}`}
+                    href={heroImageUrl}
                     as="image"
+                />
+                <link
+                    rel="preload"
+                    href="/fonts/GeistVF.woff"
+                    as="font"
+                    type="font/woff"
+                    crossOrigin="anonymous"
+                />
+                <link
+                    rel="preload"
+                    href="/fonts/GeistMonoVF.woff"
+                    as="font"
+                    type="font/woff"
+                    crossOrigin="anonymous"
                 />
             </Head>
             <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
