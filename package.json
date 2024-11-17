@@ -4,6 +4,7 @@
   "description": "Frontend using Next.js",
   "main": "index.js",
   "scripts": {
+    "prebuild": "node ./src/scripts/clearUploads.js && node ./src/scripts/downloadImages.js",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

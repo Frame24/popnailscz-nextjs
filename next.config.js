@@ -1,4 +1,3 @@
-// Импортируем домен Strapi из переменной окружения
 const strapiBaseUrl = process.env.STRAPI_BASE_URL.replace(/^https?:\/\//, ''); // убираем http/https для чистого домена
 
 module.exports = {
