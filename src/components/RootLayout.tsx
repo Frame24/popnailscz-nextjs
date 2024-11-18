@@ -6,16 +6,18 @@ import React, { useEffect } from "react";
 
 // Подключаем шрифты
 const geistSans = localFont({
-    src: "/fonts/GeistVF.woff",
+    src: "./fonts/GeistVF.woff",
     variable: "--font-geist-sans",
     weight: "100 900",
 });
 
 const geistMono = localFont({
-    src: "/fonts/GeistMonoVF.woff",
+    src: "./fonts/GeistMonoVF.woff",
     variable: "--font-geist-mono",
     weight: "100 900",
 });
+
+
 
 // SEO компонент для работы с мета-данными
 function SEO({
@@ -135,20 +137,6 @@ export default function RootLayout({
 
                 {/* Предзагрузка изображений */}
                 <link rel="preload" href={heroImageUrl} as="image" />
-                <link
-                    rel="preload"
-                    href="/fonts/GeistVF.woff"
-                    as="font"
-                    type="font/woff"
-                    crossOrigin="anonymous"
-                />
-                <link
-                    rel="preload"
-                    href="/fonts/GeistMonoVF.woff"
-                    as="font"
-                    type="font/woff"
-                    crossOrigin="anonymous"
-                />
             </Head>
             <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
                 {children}
