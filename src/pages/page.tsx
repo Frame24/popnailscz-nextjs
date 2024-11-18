@@ -139,7 +139,7 @@ export default function Home({
                 <div className="absolute inset-0 z-0">
                     <Image
                         src={`/api/image-proxy?url=${encodeURIComponent(`${strapiBaseUrl}${heroImage.data?.Image?.url}`)}`}
-                        alt="Background"
+                        alt={heroImage.data?.Image?.alternativeText || `Image ${heroImage.data?.Image?.name}`}
                         fill
                         style={{ objectFit: 'cover' }}
                         priority
@@ -210,7 +210,7 @@ export default function Home({
                                             <div className="relative w-full h-full"> {/* Контейнер с фиксированной высотой */}
                                                 <Image
                                                     src={`/api/image-proxy?url=${encodeURIComponent(`${strapiBaseUrl}${image?.url}`)}`}
-                                                    alt={`Studio ${index}`}
+                                                    alt={`Studio Popnailscz v Praze na adrese Kovářská 549/12, Praha 9 — snímek ${index + 1}`}
                                                     fill
                                                     style={{ objectFit: 'cover' }}
                                                     className="rounded-lg shadow-xl"
@@ -260,7 +260,7 @@ export default function Home({
                                             <div className="w-full h-80 relative">
                                                 <Image
                                                     src={`/api/image-proxy?url=${encodeURIComponent(`${strapiBaseUrl}${image?.url}`)}`}
-                                                    alt={`Práce ${index}`}
+                                                    alt={`Práce v Popnailscz na adrese Kovářská 549/12, Praha 9 — ukázka ${index + 1}`}
                                                     fill
                                                     className="object-cover rounded-lg shadow-xl"
                                                     loading="lazy"
@@ -295,7 +295,7 @@ export default function Home({
 
                     {/* Таблица услуг и цен */}
                     <div className='w-full lg:w-2/3 bg-white p-10 rounded-xl shadow-xl'>
-                        <table className='w-full table-auto font-serif text-lg'>
+                        <table className='w-full table-auto font-serif text-lg' aria-label="Ceník služeb Popnailscz">
                             <thead>
                                 <tr>
                                     <th className='text-left text-pink-700 pb-4'>{priceList?.data[0]?.header1 || "SLUŽBA"}</th>

@@ -67,22 +67,63 @@ function SEO({
                     __html: JSON.stringify({
                         "@context": "https://schema.org",
                         "@type": "LocalBusiness",
-                        name: "Popnailscz",
-                        image: ogImage,
-                        url: ogUrl,
-                        telephone: "+420123456789",
-                        address: {
+                        "name": "Popnailscz",
+                        "image": ogImage,
+                        "url": ogUrl,
+                        "telephone": "+420770649757",
+                        "address": {
                             "@type": "PostalAddress",
-                            streetAddress: "Praha 1, Náměstí",
-                            addressLocality: "Praha",
-                            postalCode: "11000",
-                            addressCountry: "CZ",
+                            "streetAddress": "Kovářská 549/12",
+                            "addressLocality": "Praha 9",
+                            "postalCode": "19000",
+                            "addressCountry": "CZ"
                         },
-                        openingHours: "Mo,Tu,We,Th,Fr 09:00-19:00",
-                        priceRange: "$$",
+                        "openingHoursSpecification": [
+                            {
+                                "@type": "OpeningHoursSpecification",
+                                "dayOfWeek": [
+                                    "Monday"
+                                ],
+                                "opens": "09:00",
+                                "closes": "20:00"
+                            },
+                            {
+                                "@type": "OpeningHoursSpecification",
+                                "dayOfWeek": [
+                                    "Wednesday"
+                                ],
+                                "opens": "09:00",
+                                "closes": "20:00"
+                            },
+                            {
+                                "@type": "OpeningHoursSpecification",
+                                "dayOfWeek": [
+                                    "Thursday"
+                                ],
+                                "opens": "09:00",
+                                "closes": "20:00"
+                            },
+                            {
+                                "@type": "OpeningHoursSpecification",
+                                "dayOfWeek": [
+                                    "Saturday"
+                                ],
+                                "opens": "09:00",
+                                "closes": "20:00"
+                            }
+                        ],
+                        "priceRange": "$$",
+                        "owner": {
+                            "@type": "Person",
+                            "name": "Fronek Oksana"
+                        },
+                        "currenciesAccepted": "CZK",
+                        "paymentAccepted": "Cash, Credit Card",
+                        "description": "Popnailscz nabízí profesionální manikúru a pedikúru v Praze. Navštivte nás na adrese Kovářská 549/12, Praha 9."
                     }),
                 }}
             />
+
         </>
     );
 }
