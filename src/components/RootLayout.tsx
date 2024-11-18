@@ -6,13 +6,13 @@ import React, { useEffect } from "react";
 
 // Подключаем шрифты
 const geistSans = localFont({
-    src: "/uploads/fonts/GeistVF.woff",
+    src: "/fonts/GeistVF.woff",
     variable: "--font-geist-sans",
     weight: "100 900",
 });
 
 const geistMono = localFont({
-    src: "/uploads/fonts/GeistMonoVF.woff",
+    src: "/fonts/GeistMonoVF.woff",
     variable: "--font-geist-mono",
     weight: "100 900",
 });
@@ -137,14 +137,14 @@ export default function RootLayout({
                 <link rel="preload" href={heroImageUrl} as="image" />
                 <link
                     rel="preload"
-                    href="/uploads/GeistVF.woff"
+                    href="/fonts/GeistVF.woff"
                     as="font"
                     type="font/woff"
                     crossOrigin="anonymous"
                 />
                 <link
                     rel="preload"
-                    href="/uploads/GeistMonoVF.woff"
+                    href="/fonts/GeistMonoVF.woff"
                     as="font"
                     type="font/woff"
                     crossOrigin="anonymous"
