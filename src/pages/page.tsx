@@ -19,6 +19,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import RichTextBox from "../components/RichTextBox"
 
 export default function Home({
     heroSection = { data: [] },
@@ -55,6 +56,17 @@ export default function Home({
     const strapiBaseUrl = process.env.STRAPI_BASE_URL;
     const [isMenuOpen, setMenuOpen] = useState(false);
     const router = useRouter();
+
+
+    const [modalContent, setModalContent] = useState(null);
+
+    const openModal = (post) => {
+        setModalContent(post);
+    };
+
+    const closeModal = () => {
+        setModalContent(null);
+    };
 
     const changeLanguage = (locale: string) => {
         router.push(router.pathname, router.asPath, { locale });
@@ -370,23 +382,64 @@ export default function Home({
             </section>
 
             {/* Секция блога */}
-            <section id='blog' className='py-8 sm:py-16 bg-gray-100 text-center'>
-                <h2 className='text-5xl font-extrabold text-gray-800 mb-8'>
+            <section id="blog" className="py-8 sm:py-16 bg-gray-100 text-center">
+                <h2 className="text-5xl font-extrabold text-gray-800 mb-8">
                     {blog?.data[0]?.Title || "Blog"}
                 </h2>
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto'>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                     {blog?.data[0]?.Blog?.map((post, index) => (
-                        <div key={index} className='bg-gray-100 p-6 rounded-lg shadow-lg'>
-                            <h3 className='text-lg sm:text-xl sm:text-2xl font-bold text-gray-700'>
+                        <div key={index} className="bg-white p-6 rounded-lg shadow-lg">
+                            <h3 className="text-lg sm:text-xl font-bold text-gray-700">
                                 {post?.Title}
                             </h3>
-                            <p className='mt-4 text-gray-600'>
-                                {post?.BlogText}
-                            </p>
+                            {/* Рендер RichText или BlogText */}
+                            <div className="mt-4 text-gray-600">
+                                {post?.BlogRichText ? (
+                                    <RichTextBox blocks={post.BlogRichText.slice(0, 3)} />
+                                ) : (
+                                    <p>{post?.BlogText?.substring(0, 200)}...</p>
+                                )}
+                            </div>
+                            <button
+                                onClick={() => openModal(post)}
+                                className="mt-2 text-blue-500 underline focus:outline-none"
+                            >
+                                Читать далее
+                            </button>
                         </div>
                     ))}
                 </div>
             </section>
+
+            {/* Модальное окно */}
+            {modalContent && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div
+                        className="bg-white p-8 rounded-lg max-w-4xl w-full text-left relative shadow-xl max-h-[90vh] overflow-y-auto"
+                    >
+                        {/* Кнопка закрытия */}
+                        <button
+                            onClick={closeModal}
+                            className="sticky top-0 right-0 text-gray-400 hover:text-gray-600 text-2xl font-bold float-right mb-4"
+                        >
+                            ✕
+                        </button>
+                        {/* Заголовок */}
+                        <h3 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-4">
+                            {modalContent?.Title}
+                        </h3>
+                        {/* Полный текст RichText или BlogText */}
+                        <div className="text-gray-700 leading-normal">
+                            {modalContent?.BlogRichText ? (
+                                <RichTextBox blocks={modalContent.BlogRichText} />
+                            ) : (
+                                <p>{modalContent?.BlogText}</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
 
             {/* Секция контактов */}
             <section id='contacts' className='py-6 sm:py-12 bg-pink-100 text-center'>
