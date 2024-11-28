@@ -79,8 +79,14 @@ const RichTextBox: React.FC<RichTextProps> = ({ blocks }) => {
         );
       case "heading":
         const HeadingTag = `h${block.level || 1}` as keyof JSX.IntrinsicElements;
+        const headingClass =
+          block.level === 1
+            ? "text-3xl font-bold mt-4 mb-2"
+            : block.level === 2
+              ? "text-2xl font-semibold mt-3 mb-2"
+              : "text-xl font-medium mt-2 mb-2"; // Уровень 3 или ниже
         return (
-          <HeadingTag key={index}>
+          <HeadingTag key={index} className={headingClass}>
             {block.children.map((child, childIndex) =>
               renderChild(child, childIndex)
             )}
