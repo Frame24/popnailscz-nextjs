@@ -399,13 +399,15 @@ export default function Home({
                                 ) : (
                                     <p>{post?.BlogText?.substring(0, 200)}...</p>
                                 )}
-                            </div>
-                            <button
+                            </div><button
                                 onClick={() => openModal(post)}
                                 className="mt-2 text-blue-500 underline focus:outline-none"
                             >
-                                Читать далее
+                                {router.locale === 'cs-CZ' && 'Číst dál'}
+                                {router.locale === 'en' && 'Read more'}
+                                {router.locale === 'ru' && 'Читать далее'}
                             </button>
+
                         </div>
                     ))}
                 </div>
